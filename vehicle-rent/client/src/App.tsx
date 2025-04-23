@@ -1,35 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import ErrorToast from "./components/comm/ErrorToas";
+import FormStepper from "./components/comm/FormStep";
+import {FormStepsLogic} from "./components/formStepsData/FormStepsLogic";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [error, setError] = useState<string | null>(null);
+  const [activeStep, setActiveStep] = useState<number>(0);
+
+  const steps = [
+    "Personal Information",
+    "Wheel Count",
+    "Vehicle Type",
+    "Vehicle Model",
+    "Booking Dates",
+    "Confirmation",
+  ];
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="bg-gray-50 min-h-screen py-10">
+      <div className="max-w-3xl mx-auto px-4">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+          <div className="p-6 md:p-8">
+            <h1 className="text-2xl font-bold text-center mb-8 text-gray-800">
+              Vehicle Rental Booking
+            </h1>
+            <div className="mb-8">
+              <FormStepper steps={steps} currentStep={activeStep} />
+            </div>
+            <div className="mt-6">
+              <FormStepsLogic step={activeStep} setActiveStep={setActiveStep} />
+            </div>
+          </div>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
 
-export default App
+      <ErrorToast
+        show={!!error}
+        message={error || ""}
+        onClose={() => setError(null)}
+      />
+    </div>
+  );
+};
+
+export default App;
