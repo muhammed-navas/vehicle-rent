@@ -57,3 +57,12 @@ export interface ButtonProps {
   fullWidth?: boolean;
 }
 // Button.tsx 
+
+// api file 
+export interface Vehicle {
+  id: number;
+  name: string;
+  vehicleTypeId: number;
+  vehicleType?: VehicleType;
+}
+// api file 
