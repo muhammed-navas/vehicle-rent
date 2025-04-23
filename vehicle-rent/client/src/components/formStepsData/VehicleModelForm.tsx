@@ -30,23 +30,31 @@ const VehicleModelForm: React.FC<VehicleModelFormProps> = ({
   const fetchVehicles = async (vehicleTypeId: number) => {
     setLoading(true);
     setFetchError("");
+    setVehicles([]);
 
     try {
       const data = await getVehicles(vehicleTypeId);
       console.log("Fetched vehicles:", data);
-      setVehicles(data);
-
-      // If the previously selected vehicle is not in the new list, reset it
-      if (
-        formState.vehicleId &&
-        !data.some((vehicle) => vehicle.id === formState.vehicleId)
-      ) {
-        updateFormState({ vehicleId: null });
-      }
       
-      // Auto-select vehicle if there's only one available
-      if (data.length === 1 && !formState.vehicleId) {
-        updateFormState({ vehicleId: data[0].id });
+      // Check if data is valid and non-empty
+      if (Array.isArray(data)) {
+        setVehicles(data);
+        
+        // If the previously selected vehicle is not in the new list, reset it
+        if (
+          formState.vehicleId &&
+          !data.some((vehicle) => vehicle.id === formState.vehicleId)
+        ) {
+          updateFormState({ vehicleId: null });
+        }
+        
+        // Auto-select vehicle if there's only one available
+        if (data.length === 1 && !formState.vehicleId) {
+          updateFormState({ vehicleId: data[0].id });
+        }
+      } else {
+        console.error("Invalid data format received:", data);
+        setFetchError("Received invalid data format from server");
       }
     } catch (err) {
       console.error("Error fetching vehicles:", err);
@@ -151,8 +159,9 @@ const VehicleModelForm: React.FC<VehicleModelFormProps> = ({
             onClick={() => fetchVehicles(formState.vehicleTypeId as number)}
             variant="outline"
             className="ml-2"
+            disabled={loading}
           >
-            Refresh Vehicles
+            {loading ? "Loading..." : "Refresh Vehicles"}
           </Button>
         ) : null}
         <Button

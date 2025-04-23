@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -6,23 +9,41 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
+// VehicleType represents categories like "hatchback", "suv", "sedan" for cars
+// or "cruiser", "sports" for bikes
 model VehicleType {
-  id         Int       @id @default(autoincrement())
-  name       String    @unique
-  wheelCount Int
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  vehicles   Vehicle[]
-
-  @@map("VehicleType")
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  wheelCount  Int       // 2 for bikes, 4 for cars
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  vehicles    Vehicle[]
 }
 
+// Vehicle represents specific models like "Honda City", "Toyota Innova", etc.
 model Vehicle {
   id            Int         @id @default(autoincrement())
   name          String
   vehicleTypeId Int
+  vehicleType   VehicleType @relation(fields: [vehicleTypeId], references: [id])
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  vehicleType   VehicleType @relation(fields: [vehicleTypeId], references: [id])
+  bookings      Booking[]
+
+  @@unique([name, vehicleTypeId])
+}
+
+// Booking represents a reservation for a vehicle
+model Booking {
+  id          Int      @id @default(autoincrement())
+  firstName   String
+  lastName    String
+  vehicleId   Int
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id])
+  startDate   DateTime
+  endDate     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([vehicleId, startDate, endDate])
 }

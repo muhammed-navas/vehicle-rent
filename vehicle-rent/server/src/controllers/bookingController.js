@@ -22,7 +22,6 @@ export const createBookingValidation = [
 ];
 
 export const createBooking = async (req, res) => {
-  // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({
@@ -35,11 +34,11 @@ export const createBooking = async (req, res) => {
     const bookingData = req.body;
     const { firstName, lastName, vehicleId, startDate, endDate } = bookingData;
 
-    // Convert string dates to Date objects
+
     const bookingStartDate = new Date(startDate);
     const bookingEndDate = new Date(endDate);
 
-    // Check if the vehicle exists
+
     const vehicle = await prisma.vehicle.findUnique({
       where: { id: vehicleId },
     });
@@ -48,22 +47,22 @@ export const createBooking = async (req, res) => {
       return res.status(404).json({ message: "Vehicle not found" });
     }
 
-    // Check for overlapping bookings
+
     const overlappingBookings = await prisma.booking.findMany({
       where: {
         vehicleId,
         OR: [
-          // Case 1: New booking starts during an existing booking
+
           {
             startDate: { lte: bookingStartDate },
             endDate: { gte: bookingStartDate },
           },
-          // Case 2: New booking ends during an existing booking
+
           {
             startDate: { lte: bookingEndDate },
             endDate: { gte: bookingEndDate },
           },
-          // Case 3: New booking completely contains an existing booking
+
           {
             startDate: { gte: bookingStartDate },
             endDate: { lte: bookingEndDate },
@@ -82,7 +81,7 @@ export const createBooking = async (req, res) => {
       });
     }
 
-    // Create the booking
+
     const booking = await prisma.booking.create({
       data: {
         firstName,

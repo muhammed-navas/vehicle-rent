@@ -4,10 +4,8 @@ import { createBooking, createBookingValidation, getBookings } from '../controll
 
 const bookingRoutes = Router();
 
-// Get all bookings
-bookingRoutes.get("/", getBookings);
 
-// Create a new booking
+bookingRoutes.get("/", getBookings);
 bookingRoutes.post("/", createBookingValidation, createBooking);
 
 export default bookingRoutes;
