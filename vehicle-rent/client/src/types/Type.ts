@@ -64,5 +64,16 @@ export interface Vehicle {
   name: string;
   vehicleTypeId: number;
   vehicleType?: VehicleType;
+  description?: string;
+}
+export interface Booking {
+  id?: number;
+  firstName: string;
+  lastName: string;
+  vehicleId: number;
+  vehicle?: Vehicle;
+  startDate: Date | string;
+  endDate: Date | string;
 }
 // api file 
+

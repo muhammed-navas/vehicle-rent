@@ -31,8 +31,11 @@ const VehicleTypeForm = ({
     setLoading(true);
     setFetchError("");
 
+    console.log(wheelCount, "------------");
+
     try {
       const data = await getVehicleTypes(wheelCount);
+      console.log(data,'------------')
       setVehicleTypes(data);
 
       // If the previously selected type is not in the new list, reset it

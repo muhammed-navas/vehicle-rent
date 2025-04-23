@@ -28,7 +28,11 @@ const App = () => {
               <FormStepper steps={steps} currentStep={activeStep} />
             </div>
             <div className="mt-6">
-              <FormStepsLogic step={activeStep} setActiveStep={setActiveStep} />
+              <FormStepsLogic
+                step={activeStep}
+                setActiveStep={setActiveStep}
+                setError={setError}
+              />
             </div>
           </div>
         </div>

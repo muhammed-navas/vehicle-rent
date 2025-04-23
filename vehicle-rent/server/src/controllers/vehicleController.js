@@ -1,17 +1,14 @@
 import prisma from "../db.js";
 
 export const getVehicleTypes = async (req, res) => {
+  console.log('------------------------------------------------------------------')
   try {
     let wheelCount = undefined;
-    // Check if wheelCount query parameter exists and is not empty
     if (req.query.wheelCount && req.query.wheelCount.trim() !== '') {
-      // Use Number.parseInt with radix 10 and trim whitespace
       const parsedWheelCount = Number.parseInt(req.query.wheelCount.trim(), 10);
-      // Check if parsing resulted in a valid integer (not NaN)
       if (!Number.isNaN(parsedWheelCount)) {
         wheelCount = parsedWheelCount;
       } else {
-        // Log a warning if the input was invalid, but proceed without filter
         console.warn(`Invalid wheelCount received: ${req.query.wheelCount}`);
       }
     }
